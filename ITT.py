@@ -285,6 +285,15 @@ def call_llm_for_correction(text: str, server_url: str) -> str:
     """OCR 결과를 LLM으로 교정 (오타 수정)"""
     
     load_dotenv()
+    
+    # server_url이 None이거나 빈 문자열이면 환경변수에서 다시 읽기
+    if not server_url:
+        server_url = os.getenv("LLM_SERVER_URL")
+    
+    if not server_url:
+        print("[WARN] LLM_SERVER_URL 환경변수가 설정되지 않음. 교정 생략")
+        return text
+    
     api_key = os.getenv("API_KEY")
     if not api_key:
         print("[WARN] API_KEY 환경변수가 설정되지 않음. 교정 생략")
@@ -341,6 +350,15 @@ def call_llm_for_description(text: str, server_url: str) -> str:
     """전체 텍스트를 LLM에 보내서 자연스럽게 설명 받기"""
     
     load_dotenv()
+    
+    # server_url이 None이거나 빈 문자열이면 환경변수에서 다시 읽기
+    if not server_url:
+        server_url = os.getenv("LLM_SERVER_URL")
+    
+    if not server_url:
+        print("[WARN] LLM_SERVER_URL 환경변수가 설정되지 않음. 설명 생략")
+        return ""
+    
     api_key = os.getenv("API_KEY")
     if not api_key:
         print("[WARN] API_KEY 환경변수가 설정되지 않음. 설명 생략")
@@ -471,6 +489,8 @@ def process_image(image_path: str, txt_path: str, csv_path: str, llm_server_url:
 
 # 실행
 if __name__ == "__main__":
+    
+    load_dotenv()
     IMAGE_PATH = "img/img_to_text_sample_2.png"
     TXT_PATH = "output/output.txt"
     CSV_PATH = "output/output.csv"
@@ -478,4 +498,3 @@ if __name__ == "__main__":
     
     # level: 'word', 'line', 'paragraph' 중 선택
     process_image(IMAGE_PATH, TXT_PATH, CSV_PATH, LLM_SERVER_URL, level='line')
-

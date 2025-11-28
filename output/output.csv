@@ -1,29 +1,29 @@
 text,x,y,w,h,line_num,corrected
-OCR Exarple,84,24,228,52,0,False
-Select Picture ..,591,129,241,50,1,False
-Recaghize,1307,129,169,54,2,False
-Paragraphs,1319,211,177,54,3,False
-Tent Lines,1573,213,161,45,4,False
-Campoherts,1987,213,191,52,5,False
-words,1805,215,108,42,6,False
-Tent,1347,264,75,42,7,False
-Regions,2022,268,132,48,8,False
-HTHL,1573,269,100,42,9,False
-UHL:,1797,269,102,42,10,False
-Thsis ala a12 point tent totest the,1287,324,538,49,11,False
-This is alot of 12 point text to test the,102,362,1018,77,12,False
-ocr code ard seeif it Woiks oh all types,1286,366,570,49,13,False
-마 fileformat,1287,405,186,40,14,False
-ocr code and seeif it works or,99,431,834,64,15,False
-al types,953,435,236,68,16,False
-The quick brown dog jumped over the,1288,478,550,53,17,False
-of file forrrat.,99,492,360,65,18,False
-lazy fox. The quick browr dog jumped,1280,518,553,52,19,False
-The quick brown dog jurnped over the,102,550,1028,80,20,False
-oyer the lazyfox The quick browr dog,1286,556,567,54,21,False
-jurnped over the lazy foy The quick,1285,596,517,51,22,False
-lazy fox. The quick browr dog jurnped,94,611,1038,81,23,False
-browh dog jumped over the lazy For,1287,634,516,54,24,False
-over the lazy fox. The quick browr dog,97,676,1055,79,25,False
-jumped ovar the lazy fox The quick,105,733,985,87,26,False
-browr dog jurtped over the lazy fox.,97,798,988,86,27,False
+OCR Example,84,24,228,52,0,True
+Select Picture ..,591,129,241,50,1,True
+Recognize,1307,129,169,54,2,True
+Paragraphs,1319,211,177,54,3,True
+Text Lines,1573,213,161,45,4,True
+Campoherts,1987,213,191,52,5,True
+words,1805,215,108,42,6,True
+Text,1347,264,75,42,7,True
+Regions,2022,268,132,48,8,True
+HTML,1573,269,100,42,9,True
+URL:,1797,269,102,42,10,True
+This is a 12 point text to test the,1287,324,538,49,11,True
+This is a lot of 12 point text to test the,102,362,1018,77,12,True
+OCR code and see if it works on all types,1286,366,570,49,13,True
+마 fileformat,1287,405,186,40,14,True
+OCR code and see if it works or,99,431,834,64,15,True
+all types,953,435,236,68,16,True
+The quick brown dog jumped over the,1288,478,550,53,17,True
+of file format.,99,492,360,65,18,True
+lazy fox. The quick brown dog jumped,1280,518,553,52,19,True
+The quick brown dog jumped over the,102,550,1028,80,20,True
+over the lazy fox. The quick brown dog,1286,556,567,54,21,True
+jumped over the lazy fox. The quick,1285,596,517,51,22,True
+lazy fox. The quick brown dog jumped,94,611,1038,81,23,True
+brown dog jumped over the lazy fox,1287,634,516,54,24,True
+over the lazy fox. The quick brown dog,97,676,1055,79,25,True
+jumped over the lazy fox. The quick,105,733,985,87,26,True
+brown dog jumped over the lazy fox.,97,798,988,86,27,True

@@ -1,3 +1,4 @@
 .env
+__pycache__/
 
 99. Testing - server.ipynb

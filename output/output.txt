@@ -1,26 +1,73 @@
+Item 0 | image=img_to_text_telechips.png | bbox=[52, 23, 527, 42]
+Mode 1: MSB Justified Format
+
+Item 1 | image=img_to_text_telechips.png | bbox=[157, 143, 126, 42]
+LRCKX
+
+Item 2 | image=img_to_text_telechips.png | bbox=[1611, 161, 74, 42]
+Rch
+
+Item 3 | image=img_to_text_telechips.png | bbox=[833, 165, 66, 38]
+Lch
+
+Item 4 | image=img_to_text_telechips.png | bbox=[1332, 236, 150, 78]
+UUUI7
+
+Item 5 | image=img_to_text_telechips.png | bbox=[1538, 236, 190, 76]
+VUVUL
+
+Item 6 | image=img_to_text_telechips.png | bbox=[1885, 239, 136, 68]
+UVIVIT
+
+Item 7 | image=img_to_text_telechips.png | bbox=[621, 245, 100, 66]
+UUI
+
+Item 8 | image=img_to_text_telechips.png | bbox=[157, 251, 114, 42]
+BICKX
+
+Item 9 | image=img_to_text_telechips.png | bbox=[157, 395, 114, 42]
+SDINX
+
+Item 10 | image=img_to_text_telechips.png | bbox=[1261, 396, 313, 43]
+Rch Data (MSB First)
+
+Item 11 | image=img_to_text_telechips.png | bbox=[505, 397, 307, 45]
+Lch Data (MSB First)
+
+Item 12 | image=img_to_text_telechips.png | bbox=[1061, 401, 160, 38]
+Don't Care
+
+Item 13 | image=img_to_text_telechips.png | bbox=[1817, 401, 162, 38]
+Don't Care
+
+Item 14 | image=img_to_text_telechips.png | bbox=[156, 503, 156, 42]
+SDOUTX
+
+Item 15 | image=img_to_text_telechips.png | bbox=[1263, 504, 313, 43]
+Rch Data (MSB First)
+
+Item 16 | image=img_to_text_telechips.png | bbox=[503, 505, 308, 42]
+Lch Data (MSB First)
+
+Item 17 | image=img_to_text_telechips.png | bbox=[869, 580, 650, 62]
+Figure 9.15 MSB Justified Format
+
 
 ============================================================
 이미지 내용 설명:
 ============================================================
-이미지는 OCR(Optical Character Recognition) 데모 프로그램의 화면을 캡처한 것으로 보입니다. 화면 상단에는 **“Select Picture ..”** 라는 버튼이 있어 사용자가 이미지 파일을 선택할 수 있게 하고, 그 옆에 **“Recognize”** 라는 버튼이 있어 선택한 이미지를 OCR 엔진으로 분석하도록 하는 구조입니다.  
+이미지는 'Mode 1: MSB Justified Format'을 설명하는 표 형태의 다이어그램이다. 
+- 좌측 상단(라인 0)에는 모드 명칭이 표시되고, 그 아래에 신호 라인 이름들이 열거된다. 
+- 라인 1~9은 각 신호 라인의 라벨을 나타내며, LRCKX, Rch, Lch, UUUI7, VUVUL, UVIVIT, UUI, BICKX, SDINX 등으로 구성돼 있다. 이 라벨들은 오디오 인터페이스(예: I2S)에서 사용되는 클럭 및 데이터 라인을 의미한다. 
+- 라인 10~13은 'Rch Data (MSB First)'와 'Lch Data (MSB First)'가 각각 오른쪽(Rch)과 왼쪽(Lch) 채널 데이터를 MSB 우선으로 전송한다는 것을 보여준다. 가운데에 위치한 'Don't Care' 영역은 해당 비트가 전송에 사용되지 않음(예약 비트)임을 나타낸다. 
+- 라인 14~16은 SDOUTX 라인 아래에 동일한 채널 데이터 배치를 다시 보여주어, 입력(SDINX)과 출력(SDOUTX) 방향 모두 같은 포맷을 사용한다는 점을 강조한다. 
+- 전체 레이아웃은 두 개의 주요 블록(입력 블록: 라인 9~13, 출력 블록: 라인 14~16)으로 구분되며, 각 블록은 동일한 채널 순서를 유지한다. 
+- 라인 17의 캡션 ‘Figure 9.15 MSB Justified Format’은 이 다이어그램이 문서의 9.15 그림임을 명시한다.
 
-아래쪽에는 OCR 결과를 어떤 형태로 보여줄지를 선택할 수 있는 옵션들이 나열돼 있습니다.
+**핵심 인사이트**
+1. **채널 매핑**: Rch와 Lch 데이터가 각각 MSB부터 전송되며, 각 비트 위치는 고정된 라벨(예: UUUI7, VUVUL 등)과 매핑된다.
+2. **예약 비트**: ‘Don't Care’ 영역이 두 군데 존재해, 전송 중 무시되는 비트가 있음을 알 수 있다.
+3. **대칭 구조**: 입력(SDINX)과 출력(SDOUTX) 구성이 동일해, 데이터 흐름이 양방향으로 동일한 포맷을 따른다.
+4. **시각적 구분**: bbox 좌표를 보면 라벨들은 좌측에서 우측으로 순차적으로 배치되고, 데이터 영역은 중앙에 넓게 차지한다. 이는 사용자가 라벨 ↔ 데이터 매핑을 한눈에 파악하도록 설계된 것으로 보인다.
 
-- **Paragraphs** – 인식된 텍스트를 문단 단위로 구분  
-- **Text Lines** – 한 줄씩 구분  
-- **Words** – 단어 단위로 분리  
-- **Text Regions** – 텍스트가 포함된 영역(블록) 표시  
-- **HTML** – HTML 형식으로 출력  
-- **URL** – 인식된 텍스트를 URL 형태로 변환(또는 웹 주소 입력)
-
-그 아래에는 OCR이 실제로 인식한 샘플 텍스트가 여러 줄에 걸쳐 표시됩니다. 텍스트는 크게 두 종류로 구성돼 있습니다.
-
-1. **“This is a 12 point text to test the OCR code and see if it works on all types of file format.”** 라는 문장  
-   - 12포인트 크기의 일반 문장을 이용해 다양한 파일 포맷(예: PNG, JPG 등)에서도 정확히 인식되는지를 테스트하는 내용입니다.  
-   - 문장이 약간씩 변형되어 여러 번 반복돼 있어, OCR 결과가 일관되게 나오고 있는지를 확인하려는 의도가 엿보입니다.
-
-2. **“The quick brown dog jumped over the lazy fox.”** 라는 문장(원래는 “The quick brown fox jumps over the lazy dog”이라는 유명한 팬그램)  
-   - 여기서는 ‘dog’와 ‘fox’를 바꾸어 여러 변형 형태로 반복해서 배치했습니다.  
-   - 팬그램은 알파벳 전체를 포함하고 있어 글자 인식 정확도를 평가하기에 좋은 예시이며, 문장이 뒤섞여 여러 줄에 걸쳐 나타나므로 **문단·줄·단어 단위** 인식 옵션이 제대로 작동하는지를 눈으로 확인할 수 있습니다.
-
-전체적으로 보면, 이 화면은 **OCR 프로그램이 이미지에서 텍스트를 추출하고, 사용자가 원하는 형태(문단, 줄, 단어, HTML 등)로 결과를 보여주는 과정을 시연**하고 있습니다. 화면에 보이는 샘플 텍스트는 인식 정확도와 출력 포맷 선택 기능을 테스트하기 위해 의도적으로 여러 번 반복·변형된 문장들로 구성돼 있습니다. 따라서 이미지 자체는 “OCR 데모 인터페이스와 그 결과 예시”를 보여주는 화면이라고 요약할 수 있습니다.
+이 정보를 바탕으로 구현 시에는 라벨 순서와 ‘Don't Care’ 비트를 정확히 반영해 MSB‑first 직렬 전송 로직을 설계해야 한다.

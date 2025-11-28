@@ -1,3 +1,5 @@
+import base64
+import json
 import cv2
 import easyocr
 import pandas as pd
@@ -274,143 +276,159 @@ def group_by_paragraph(words_data: List[Dict], para_threshold_ratio: float = 1.5
     return result
 
 
-# LLM 내용 파악 및 설명
 from dotenv import load_dotenv
 
-def generate_text_from_data(data: List[Dict]) -> str:
-    """추출된 데이터를 텍스트로 변환"""
-    return '\n'.join([d['text'] for d in data])
 
-def call_llm_for_correction(text: str, server_url: str) -> str:
-    """OCR 결과를 LLM으로 교정 (오타 수정)"""
-    
+def encode_image_to_base64(image_path: str) -> str:
+    """이미지를 Base64 문자열로 변환"""
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode('utf-8')
+
+
+def generate_text_with_structure(data: List[Dict]) -> str:
+    """
+    OCR 결과에 위치/라인 정보를 붙여 LLM이 맥락을 이해할 수 있도록 변환
+    """
+    texts = []
+    for d in data:
+        item_idx = d.get('item_idx', 0)
+        line_num = d.get('line_num')
+        paragraph_num = d.get('paragraph_num')
+        bbox = (d.get('x'), d.get('y'), d.get('w'), d.get('h'))
+        image_name = d.get('image_file') or d.get('image_name') or ""
+        parts = [f"Item {item_idx}"]
+        if line_num is not None:
+            parts.append(f"Line {line_num}")
+        if paragraph_num is not None:
+            parts.append(f"Paragraph {paragraph_num}")
+        if bbox != (None, None, None, None):
+            parts.append(f"bbox={bbox}")
+        if image_name:
+            parts.append(f"image={image_name}")
+        prefix = " | ".join(parts)
+        texts.append(f"[{prefix}] {d.get('text', '').strip()}")
+    return '\n'.join(texts)
+
+
+def call_llm_for_correction_and_description(data: List[Dict], server_url: str, enable_correction: bool = True) -> Tuple[Dict[int, str], str]:
+    """
+    LLM을 한 번 호출하여 OCR 교정과 설명을 동시에 수행
+    """
     load_dotenv()
-    
-    # server_url이 None이거나 빈 문자열이면 환경변수에서 다시 읽기
+
     if not server_url:
         server_url = os.getenv("LLM_SERVER_URL")
-    
-    if not server_url:
-        print("[WARN] LLM_SERVER_URL 환경변수가 설정되지 않음. 교정 생략")
-        return text
-    
+
     api_key = os.getenv("API_KEY")
-    if not api_key:
-        print("[WARN] API_KEY 환경변수가 설정되지 않음. 교정 생략")
-        return text
-    
-    system_prompt = """당신은 OCR 결과 교정 전문가입니다.
-OCR로 추출된 텍스트에는 다음과 같은 오류가 있을 수 있습니다:
-- 철자 오류 (예: "Recoghize" → "Recognize")
-- 문자 오인식 (예: "Tent" → "Text", "UHLV" → "UNLV")
-- 단어 분리 오류 (예: "Thisis" → "This is")
 
-원본 텍스트의 의미와 맥락을 최대한 유지하면서, 명백한 OCR 오류만 수정해주세요.
-원본 구조(줄바꿈, 공백 등)는 최대한 유지해주세요.
-오류가 없다고 판단되면 원본 그대로 반환해주세요."""
-    
-    user_prompt = f"""다음 OCR 결과를 교정해주세요:
+    if not server_url or not api_key:
+        if not server_url:
+            print("[WARN] LLM_SERVER_URL 환경변수가 설정되지 않음. LLM 호출 생략")
+        if not api_key:
+            print("[WARN] API_KEY 환경변수가 설정되지 않음. LLM 호출 생략")
+        return {}, ""
 
-{text}"""
-    
+    structured_text = generate_text_with_structure(data)
+    correction_instruction = "OCR 오류를 교정하고" if enable_correction else "원문을 유지하면서"
+
+    system_prompt = f"""당신은 OCR 교정 및 Data Insight 전문가입니다.
+입력으로 주어진 각 Item은 이미지에서 추출된 텍스트 한 줄이며, 이미지 좌표(x,y,w,h), 라인, 문단 정보가 포함되어 있습니다.
+{correction_instruction} 전체 내용을 분석하여, 텍스트 간 관계, 구조, 패턴, 의미를 파악한 후,
+이미지 관점에서 데이터 인사이트를 제공합니다.
+- 단순 요약이 아니라, 이미지가 어떤 데이터를 보여주는지, 핵심 정보를 포함
+- 라인/문단/영역 정보를 활용하여 의미 있는 Data Insight 도출
+반드시 JSON 형식으로만 응답하세요.
+모든 답변은 한국어로 작성해주세요.
+
+JSON 스키마 예시:
+{{
+  "corrected_lines": [
+    {{"item_idx": <int>, "text": "<교정된 또는 원문 텍스트>"}}
+  ],
+  "data_insight": "<라인 번호, 영역, 구조를 참조하며 이미지 내용을 분석하고 데이터 인사이트 제공>"
+}}
+교정을 하지 않을 경우에도 corrected_lines에는 원문 텍스트를 그대로 넣어주세요."""
+
+    user_prompt = f"""다음은 OCR로 추출한 구조화 텍스트입니다. 
+각 항목에는 text, line_num, paragraph_num, bbox 정보가 포함되어 있습니다.
+
+{structured_text}
+
+JSON만 반환하세요."""
+
     payload = {
-        "model": "openai/gpt-oss-120b", 
+        "model": "openai/gpt-oss-120b",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        "temperature": 0.1,  # 교정은 낮은 temperature로 일관성 있게
-        "max_tokens": 2000,
+        "temperature": 0.1 if enable_correction else 0.2,
+        "max_tokens": 100000,
         "top_p": 1
     }
-    
+
     try:
         url = f"{server_url}/chat/completions"
         res = requests.post(url, json=payload, headers={
             "Authorization": f"Bearer {api_key}"
         }, timeout=60)
         res.raise_for_status()
-        
+
         result = res.json()
-        content = result.get("choices", [{}])[0].get("message", {}).get("content")
-        if content:
-            corrected = str(content).strip()
-            # 프롬프트로 인해 추가된 설명문 제거
-            if "```" in corrected:
-                lines = corrected.split("\n")
-                corrected = "\n".join([l for l in lines if not l.strip().startswith("```")])
-            return corrected
-        return text
-            
+        content = result.get("choices", [{}])[0].get("message", {}).get("content", "")
+        if not content:
+            return {}, ""
+
+        content = content.strip()
+        if content.startswith("```"):
+            content = content.strip("`")
+            start = content.find("{")
+            end = content.rfind("}")
+            if start != -1 and end != -1:
+                content = content[start:end+1]
+
+        try:
+            parsed = json.loads(content)
+        except json.JSONDecodeError:
+            print("[WARN] LLM 응답 JSON 파싱 실패. 원문 유지")
+            return {}, ""
+
+        corrected_lines = {item["item_idx"]: item["text"] for item in parsed.get("corrected_lines", []) if "item_idx" in item and "text" in item}
+        data_insight = parsed.get("data_insight", "").strip()
+        return corrected_lines, data_insight
+
     except Exception as e:
-        print(f"[WARN] LLM 교정 실패: {e}")
-        return text
-
-def call_llm_for_description(text: str, server_url: str) -> str:
-    """전체 텍스트를 LLM에 보내서 자연스럽게 설명 받기"""
-    
-    load_dotenv()
-    
-    # server_url이 None이거나 빈 문자열이면 환경변수에서 다시 읽기
-    if not server_url:
-        server_url = os.getenv("LLM_SERVER_URL")
-    
-    if not server_url:
-        print("[WARN] LLM_SERVER_URL 환경변수가 설정되지 않음. 설명 생략")
-        return ""
-    
-    api_key = os.getenv("API_KEY")
-    if not api_key:
-        print("[WARN] API_KEY 환경변수가 설정되지 않음. 설명 생략")
-        return ""
-    
-    system_prompt = """당신은 이미지에서 추출된 텍스트를 분석하는 전문가입니다.
-OCR로 추출된 텍스트를 보고 이미지의 내용을 자연스럽게 파악하여 설명해주세요.
-텍스트에 오류가 있을 수 있으니, 맥락을 고려하여 의미를 파악한 후 설명해주세요.
-모든 답변은 반드시 한국어로 작성해주세요."""
-    
-    user_prompt = f"""다음은 이미지에서 OCR로 추출된 텍스트입니다:
-
-{text}
-
-이 텍스트가 어떤 내용을 담고 있는지, 이미지에서 무엇을 보여주는지 자연스럽게 설명해주세요."""
-    
-    payload = {
-        "model": "openai/gpt-oss-120b", 
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        "temperature": 0.3,
-        "max_tokens": 1000,
-        "top_p": 1
-    }
-    
-    try:
-        url = f"{server_url}/chat/completions"
-        res = requests.post(url, json=payload, headers={
-            "Authorization": f"Bearer {api_key}"
-        }, timeout=60)
-        res.raise_for_status()
-        
-        result = res.json()
-        content = result.get("choices", [{}])[0].get("message", {}).get("content")
-        if content:
-            return str(content).strip()
-        return ""
-            
-    except Exception as e:
-        print(f"[WARN] LLM 설명 생성 실패: {e}")
-        return ""
+        print(f"[WARN] LLM 교정/설명 통합 호출 실패: {e}")
+        return {}, ""
 
 
 # Output
+def attach_image_metadata(data: List[Dict], image_path: str):
+    """각 항목에 이미지 메타데이터(Base64, 파일명, bbox) 추가"""
+    if not data:
+        return
+    image_file = os.path.basename(image_path)
+    try:
+        image_b64 = encode_image_to_base64(image_path)
+    except Exception as e:
+        print(f"[WARN] 이미지 Base64 인코딩 실패: {e}")
+        image_b64 = ""
+
+    for item in data:
+        item['image_path'] = image_path
+        item['image_file'] = image_file
+        item['image_base64'] = image_b64
+        item['bbox'] = [item.get('x', 0), item.get('y', 0), item.get('w', 0), item.get('h', 0)]
+
+
 def save_output(data: List[Dict], txt_path: str, csv_path: str, description: str = ""):
     # TXT 저장
     with open(txt_path, 'w', encoding='utf-8') as f:
-        # for d in data:
-        #     f.write(d['text'] + "\n")
-        
+        for d in data:
+            ref = f"Item {d.get('item_idx', 0)} | image={d.get('image_file', '')} | bbox={d.get('bbox')}"
+            f.write(ref + "\n")
+            f.write(d.get('text', '') + "\n\n")
+
         if description:
             f.write("\n" + "="*60 + "\n")
             f.write("이미지 내용 설명:\n")
@@ -448,35 +466,34 @@ def process_image(image_path: str, txt_path: str, csv_path: str, llm_server_url:
     else:  # word
         data = words_data
     
-    # OCR 교정 (Optional)
-    if enable_correction:
-        print(f"[INFO] OCR 교정 시작...")
-        full_text = generate_text_from_data(data)
-        corrected_text = call_llm_for_correction(full_text, llm_server_url)
-        
-        # 교정된 텍스트를 다시 데이터 구조로 분할
-        if corrected_text != full_text:
-            print(f"[INFO] OCR 교정 완료")
-            # 교정된 텍스트를 라인별로 분할하여 업데이트
-            corrected_lines = corrected_text.split('\n')
-            for i, item in enumerate(data):
-                if i < len(corrected_lines):
-                    item['text'] = corrected_lines[i].strip()
-                    item['corrected'] = True
-                else:
-                    item['corrected'] = False
-        else:
-            print(f"[INFO] OCR 교정: 변경사항 없음")
-            for item in data:
+    # Item 인덱스와 이미지 메타데이터 추가
+    for idx, item in enumerate(data):
+        item['item_idx'] = idx
+    attach_image_metadata(data, image_path)
+
+    corrected_map = {}
+    description = ""
+
+    corrected_map, description = call_llm_for_correction_and_description(
+        data,
+        llm_server_url,
+        enable_correction=enable_correction
+    )
+
+    if enable_correction and corrected_map:
+        print(f"[INFO] OCR 교정 결과 적용 중...")
+        for item in data:
+            item_idx = item.get('item_idx')
+            new_text = corrected_map.get(item_idx)
+            if new_text is not None and new_text.strip() != item.get('text', '').strip():
+                item['text'] = new_text.strip()
+                item['corrected'] = True
+            else:
                 item['corrected'] = False
     else:
         for item in data:
             item['corrected'] = False
-    
-    # LLM 설명 생성
-    full_text = generate_text_from_data(data)
-    description = call_llm_for_description(full_text, llm_server_url)
-    
+
     if description:
         print(f"[INFO] LLM 설명 생성 완료")
     
@@ -491,7 +508,7 @@ def process_image(image_path: str, txt_path: str, csv_path: str, llm_server_url:
 if __name__ == "__main__":
     
     load_dotenv()
-    IMAGE_PATH = "img/img_to_text_sample_2.png"
+    IMAGE_PATH = "img/img_to_text_telechips.png"
     TXT_PATH = "output/output.txt"
     CSV_PATH = "output/output.csv"
     LLM_SERVER_URL = os.getenv("LLM_SERVER_URL")

@@ -50,71 +50,46 @@ class DiagramQAGUI:
         self.setup_ui()
     
     def setup_ui(self):
-        """UI 구성"""
-        # 상단 프레임: PDF 업로드
-        top_frame = ttk.Frame(self.root, padding="10")
+        """UI 구성 (챗봇 중심 레이아웃)"""
+        # 전체를 위/아래로 나누는 메인 컨테이너
+        main_frame = ttk.Frame(self.root)
+        main_frame.pack(fill=tk.BOTH, expand=True)
+
+        # 상단: PDF 업로드/상태
+        top_frame = ttk.Frame(main_frame, padding="8")
         top_frame.pack(fill=tk.X)
-        
-        # PDF 파일 선택
-        file_frame = ttk.LabelFrame(top_frame, text="PDF 파일", padding="5")
-        file_frame.pack(fill=tk.X, pady=5)
-        
+
+        file_frame = ttk.LabelFrame(top_frame, text="PDF", padding="5")
+        file_frame.pack(fill=tk.X)
+
         self.file_path_var = tk.StringVar()
-        ttk.Entry(file_frame, textvariable=self.file_path_var, width=60).pack(side=tk.LEFT, padx=5)
-        ttk.Button(file_frame, text="PDF 선택", command=self.select_pdf).pack(side=tk.LEFT, padx=5)
-        ttk.Button(file_frame, text="텍스트 추출", command=self.extract_text_thread).pack(side=tk.LEFT, padx=5)
-        
-        # 중간 프레임: 좌우 분할
-        middle_frame = ttk.Frame(self.root)
-        middle_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
-        
-        # 왼쪽: 텍스트 결과 + 다이어그램 목록
-        left_panel = ttk.Frame(middle_frame)
-        left_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
-        
-        # 텍스트 결과 프레임
-        text_frame = ttk.LabelFrame(left_panel, text="추출된 텍스트", padding="5")
-        text_frame.pack(fill=tk.BOTH, expand=True, pady=5)
-        
-        self.text_result = scrolledtext.ScrolledText(text_frame, wrap=tk.WORD, height=15)
-        self.text_result.pack(fill=tk.BOTH, expand=True)
-        
-        # 다이어그램 목록 프레임
-        diagram_frame = ttk.LabelFrame(left_panel, text="감지된 다이어그램", padding="5")
-        diagram_frame.pack(fill=tk.BOTH, expand=False, pady=5)
-        
-        # 다이어그램 리스트박스
-        diagram_list_frame = ttk.Frame(diagram_frame)
-        diagram_list_frame.pack(fill=tk.BOTH, expand=True)
-        
-        self.diagram_listbox = tk.Listbox(diagram_list_frame, height=5)
-        self.diagram_listbox.pack(fill=tk.BOTH, expand=True)
-        self.diagram_listbox.bind('<<ListboxSelect>>', self.on_diagram_select)
-        
-        # 오른쪽: 챗봇 Q&A + 이미지
-        right_panel = ttk.Frame(middle_frame)
-        right_panel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=False, padx=5, ipadx=10)
-        
-        # Q&A 프레임
-        qa_frame = ttk.LabelFrame(right_panel, text="챗봇 Q&A", padding="10")
-        qa_frame.pack(fill=tk.BOTH, expand=True, pady=5)
-        
-        # 질문 입력
-        question_frame = ttk.Frame(qa_frame)
-        question_frame.pack(fill=tk.X, pady=5)
-        
-        ttk.Label(question_frame, text="질문:").pack(side=tk.LEFT, padx=5)
-        self.question_entry = ttk.Entry(question_frame, width=40)
-        self.question_entry.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
-        self.question_entry.bind('<Return>', lambda e: self.search_question())
-        ttk.Button(question_frame, text="검색", command=self.search_question).pack(side=tk.LEFT, padx=5)
-        
-        # 대화 내용
-        answer_frame = ttk.LabelFrame(qa_frame, text="대화 내용", padding="5")
-        answer_frame.pack(fill=tk.BOTH, expand=True, pady=5)
-        
+        ttk.Entry(file_frame, textvariable=self.file_path_var, width=70).pack(
+            side=tk.LEFT, padx=5, pady=2, fill=tk.X, expand=True
+        )
+        ttk.Button(file_frame, text="PDF 선택", command=self.select_pdf).pack(
+            side=tk.LEFT, padx=4
+        )
+        ttk.Button(file_frame, text="텍스트 추출/인덱싱", command=self.extract_text_thread).pack(
+            side=tk.LEFT, padx=4
+        )
+
+        # 중앙: Notebook 탭 (Chat, 원문/다이어그램)
+        center_frame = ttk.Frame(main_frame)
+        center_frame.pack(fill=tk.BOTH, expand=True, padx=8, pady=4)
+
+        notebook = ttk.Notebook(center_frame)
+        notebook.pack(fill=tk.BOTH, expand=True)
+
+        # --- Chat 탭 ---
+        chat_tab = ttk.Frame(notebook)
+        notebook.add(chat_tab, text="Chat")
+
+        # Chat 상단: 대화 내용
+        chat_display_frame = ttk.Frame(chat_tab)
+        chat_display_frame.pack(fill=tk.BOTH, expand=True, pady=(4, 2))
+
         self.answer_text = scrolledtext.ScrolledText(
-            answer_frame, wrap=tk.WORD, height=15, width=50
+            chat_display_frame, wrap=tk.WORD, height=25
         )
         self.answer_text.pack(fill=tk.BOTH, expand=True)
         self.answer_text.insert(
@@ -122,17 +97,51 @@ class DiagramQAGUI:
             "PDF를 선택하고 텍스트를 추출한 뒤, 궁금한 점을 질문해보세요.\n"
             "예) \"Figure 3.1의 리셋 시퀀스를 설명해줘\", \"SIC 관련 제한사항 정리해줘\" 등\n\n",
         )
-        
-        # 이미지 표시 프레임
-        image_frame = ttk.LabelFrame(right_panel, text="다이어그램 이미지", padding="5")
-        image_frame.pack(fill=tk.BOTH, expand=False, pady=5)
-        
+
+        # Chat 하단: 입력 + 전송
+        chat_input_frame = ttk.Frame(chat_tab)
+        chat_input_frame.pack(fill=tk.X, pady=(2, 4))
+
+        ttk.Label(chat_input_frame, text="질문:").pack(side=tk.LEFT, padx=5)
+        self.question_entry = ttk.Entry(chat_input_frame)
+        self.question_entry.pack(side=tk.LEFT, padx=5, pady=2, fill=tk.X, expand=True)
+        self.question_entry.bind("<Return>", lambda e: self.search_question())
+        ttk.Button(chat_input_frame, text="전송", command=self.search_question).pack(
+            side=tk.LEFT, padx=5
+        )
+
+        # Chat 우측/하단: 다이어그램 이미지
+        image_frame = ttk.LabelFrame(chat_tab, text="다이어그램 이미지", padding="5")
+        image_frame.pack(fill=tk.X, pady=(0, 4))
+
         self.image_label = ttk.Label(image_frame, text="다이어그램 이미지가 표시됩니다")
         self.image_label.pack(expand=True)
-        
-        # 상태바
+
+        # --- Source 탭 (원문/다이어그램 목록) ---
+        source_tab = ttk.Frame(notebook)
+        notebook.add(source_tab, text="원문 / 다이어그램")
+
+        # 원문 텍스트
+        text_frame = ttk.LabelFrame(source_tab, text="추출된 텍스트", padding="5")
+        text_frame.pack(fill=tk.BOTH, expand=True, pady=4)
+
+        self.text_result = scrolledtext.ScrolledText(text_frame, wrap=tk.WORD, height=15)
+        self.text_result.pack(fill=tk.BOTH, expand=True)
+
+        # 다이어그램 목록
+        diagram_frame = ttk.LabelFrame(source_tab, text="감지된 다이어그램", padding="5")
+        diagram_frame.pack(fill=tk.BOTH, expand=False, pady=(0, 4))
+
+        diagram_list_frame = ttk.Frame(diagram_frame)
+        diagram_list_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.diagram_listbox = tk.Listbox(diagram_list_frame, height=5)
+        self.diagram_listbox.pack(fill=tk.BOTH, expand=True)
+        self.diagram_listbox.bind("<<ListboxSelect>>", self.on_diagram_select)
+
+        # 하단: 상태바
         self.status_var = tk.StringVar(value="준비")
-        status_bar = ttk.Label(self.root, textvariable=self.status_var, relief=tk.SUNKEN)
+        status_bar = ttk.Label(main_frame, textvariable=self.status_var, relief=tk.SUNKEN)
         status_bar.pack(side=tk.BOTTOM, fill=tk.X)
     
     def select_pdf(self):

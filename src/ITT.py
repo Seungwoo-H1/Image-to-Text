@@ -6,8 +6,10 @@ import pandas as pd
 import numpy as np
 import requests
 import os
+import uuid
+from datetime import datetime
 
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 # EasyOCR Reader 초기화
 _reader = None
@@ -508,7 +510,7 @@ def process_image(image_path: str, txt_path: str, csv_path: str, llm_server_url:
 if __name__ == "__main__":
     
     load_dotenv()
-    IMAGE_PATH = "img/img_to_text_telechips.png"
+    IMAGE_PATH = "img/img_to_text_sample_3.png"
     TXT_PATH = "output/output.txt"
     CSV_PATH = "output/output.csv"
     LLM_SERVER_URL = os.getenv("LLM_SERVER_URL")

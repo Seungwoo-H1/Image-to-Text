@@ -1,0 +1,569 @@
+[
+  {
+    "page_num": 1,
+    "text": "TCC80 7x-Application Note for Boot Sequence  Rev. 0.10",
+    "text_type": "pdf_extracted",
+    "item_idx": 0
+  },
+  {
+    "page_num": 1,
+    "text": "8/18 Chapter 3",
+    "text_type": "pdf_extracted",
+    "item_idx": 1
+  },
+  {
+    "page_num": 1,
+    "text": "3 RESET HIERARCHY",
+    "text_type": "pdf_extracted",
+    "item_idx": 2
+  },
+  {
+    "page_num": 1,
+    "text": "Some applications require a robust system that is not affected by the failure of other systems. For example, even if the m ain cluster",
+    "text_type": "pdf_extracted",
+    "item_idx": 3
+  },
+  {
+    "page_num": 1,
+    "text": "or sub-cluster system hangs and is reset, the SIC system is required to operate properly.  To support the robust system, TCC807x",
+    "text_type": "pdf_extracted",
+    "item_idx": 4
+  },
+  {
+    "page_num": 1,
+    "text": "provides various types of resets.",
+    "text_type": "pdf_extracted",
+    "item_idx": 5
+  },
+  {
+    "page_num": 1,
+    "text": "Figure 3.1 shows four types of resets and the reset sources of each reset  in the Normal Boot with SIC boot sequence. Each reset has",
+    "text_type": "pdf_extracted",
+    "item_idx": 6,
+    "is_diagram": true
+  },
+  {
+    "page_num": 1,
+    "text": "different scopes.",
+    "text_type": "pdf_extracted",
+    "item_idx": 7,
+    "is_diagram": true
+  },
+  {
+    "page_num": 1,
+    "text": "Note:  In the Normal Boot without SIC  boot sequence, the SIC sub -system is not available.",
+    "text_type": "pdf_extracted",
+    "item_idx": 8
+  },
+  {
+    "page_num": 1,
+    "text": "According to the configuration, the safety -related blocks are set to be selectively reset by cold reset or AP system reset. For example,",
+    "text_type": "pdf_extracted",
+    "item_idx": 9
+  },
+  {
+    "page_num": 1,
+    "text": "when reset for SDM is masked, SDM is not  reset even if cold reset occurs.",
+    "text_type": "pdf_extracted",
+    "item_idx": 10
+  },
+  {
+    "page_num": 1,
+    "text": "Figure 3.1 Block Diagram of TCC807x Reset (Normal Boot with SIC)",
+    "text_type": "pdf_extracted",
+    "item_idx": 11,
+    "is_diagram": true
+  },
+  {
+    "page_num": 1,
+    "text": "CPU BUS",
+    "text_type": "pdf_extracted",
+    "item_idx": 12,
+    "is_diagram": true
+  },
+  {
+    "page_num": 1,
+    "text": "Core Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 13
+  },
+  {
+    "page_num": 1,
+    "text": "Main Cluster",
+    "text_type": "pdf_extracted",
+    "item_idx": 14
+  },
+  {
+    "page_num": 1,
+    "text": "Sub-ClusterAP System Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 15
+  },
+  {
+    "page_num": 1,
+    "text": "HSIOBUS MEMBUS",
+    "text_type": "pdf_extracted",
+    "item_idx": 16
+  },
+  {
+    "page_num": 1,
+    "text": "DDIBUS",
+    "text_type": "pdf_extracted",
+    "item_idx": 17
+  },
+  {
+    "page_num": 1,
+    "text": "GBUS",
+    "text_type": "pdf_extracted",
+    "item_idx": 18
+  },
+  {
+    "page_num": 1,
+    "text": "VIDEO",
+    "text_type": "pdf_extracted",
+    "item_idx": 19
+  },
+  {
+    "page_num": 1,
+    "text": "NPUSMU",
+    "text_type": "pdf_extracted",
+    "item_idx": 20
+  },
+  {
+    "page_num": 1,
+    "text": "STRG BUS",
+    "text_type": "pdf_extracted",
+    "item_idx": 21
+  },
+  {
+    "page_num": 1,
+    "text": "AUDIO",
+    "text_type": "pdf_extracted",
+    "item_idx": 22
+  },
+  {
+    "page_num": 1,
+    "text": "IOBUSCold ResetGlobal Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 23
+  },
+  {
+    "page_num": 1,
+    "text": "Safety Related Blocks",
+    "text_type": "pdf_extracted",
+    "item_idx": 24
+  },
+  {
+    "page_num": 1,
+    "text": "(Can be set to be",
+    "text_type": "pdf_extracted",
+    "item_idx": 25
+  },
+  {
+    "page_num": 1,
+    "text": "selectively reset )",
+    "text_type": "pdf_extracted",
+    "item_idx": 26
+  },
+  {
+    "page_num": 1,
+    "text": "CAM",
+    "text_type": "pdf_extracted",
+    "item_idx": 27
+  },
+  {
+    "page_num": 1,
+    "text": "TRVC",
+    "text_type": "pdf_extracted",
+    "item_idx": 28
+  },
+  {
+    "page_num": 1,
+    "text": "DP",
+    "text_type": "pdf_extracted",
+    "item_idx": 29
+  },
+  {
+    "page_num": 1,
+    "text": "SDMSC WDTSICRequestSICWDTGRESET",
+    "text_type": "pdf_extracted",
+    "item_idx": 30
+  },
+  {
+    "page_num": 1,
+    "text": "HSM WDTReset Source",
+    "text_type": "pdf_extracted",
+    "item_idx": 31
+  },
+  {
+    "page_num": 1,
+    "text": "Core ResetAP System",
+    "text_type": "pdf_extracted",
+    "item_idx": 32
+  },
+  {
+    "page_num": 1,
+    "text": "ResetCold ResetGRESET",
+    "text_type": "pdf_extracted",
+    "item_idx": 33
+  },
+  {
+    "page_num": 1,
+    "text": "SICPMU",
+    "text_type": "pdf_extracted",
+    "item_idx": 34
+  },
+  {
+    "page_num": 1,
+    "text": "HSM",
+    "text_type": "pdf_extracted",
+    "item_idx": 35
+  },
+  {
+    "page_num": 1,
+    "text": "Main /Sub-Cluster",
+    "text_type": "pdf_extracted",
+    "item_idx": 36
+  },
+  {
+    "page_num": 1,
+    "text": "WDT",
+    "text_type": "pdf_extracted",
+    "item_idx": 37
+  },
+  {
+    "page_num": 1,
+    "text": "Main /Sub-Cluster",
+    "text_type": "pdf_extracted",
+    "item_idx": 38
+  },
+  {
+    "page_num": 1,
+    "text": "Request",
+    "text_type": "pdf_extracted",
+    "item_idx": 39
+  },
+  {
+    "page_num": 2,
+    "text": "TCC80 7x-Application Note for Boot Sequence  Rev. 0.10",
+    "text_type": "pdf_extracted",
+    "item_idx": 40
+  },
+  {
+    "page_num": 2,
+    "text": "9/18 Chapter 3",
+    "text_type": "pdf_extracted",
+    "item_idx": 41
+  },
+  {
+    "page_num": 2,
+    "text": "Table 3.1 describes the processor that performs the reset and the reset sources of each reset in BMs ( Normal Boot with SIC and",
+    "text_type": "pdf_extracted",
+    "item_idx": 42,
+    "is_diagram": true
+  },
+  {
+    "page_num": 2,
+    "text": "Normal Boot without SIC).",
+    "text_type": "pdf_extracted",
+    "item_idx": 43
+  },
+  {
+    "page_num": 2,
+    "text": "In Normal Boot with SIC:",
+    "text_type": "pdf_extracted",
+    "item_idx": 44
+  },
+  {
+    "page_num": 2,
+    "text": " Cold reset occurs when SIC or HSM watchdog reset occurs or  is executed by SIC on its request.",
+    "text_type": "pdf_extracted",
+    "item_idx": 45
+  },
+  {
+    "page_num": 2,
+    "text": " AP system reset is executed by SIC when SC watchdog reset occurs, or on its re quest.",
+    "text_type": "pdf_extracted",
+    "item_idx": 46
+  },
+  {
+    "page_num": 2,
+    "text": " Core reset of main cluster or s ub-cluster is executed by SC when main cluster or s ub-cluster watchdog reset occurs, or on",
+    "text_type": "pdf_extracted",
+    "item_idx": 47
+  },
+  {
+    "page_num": 2,
+    "text": "main cluster or s ub-cluster ’s request.",
+    "text_type": "pdf_extracted",
+    "item_idx": 48
+  },
+  {
+    "page_num": 2,
+    "text": "In Normal Boot without SIC:",
+    "text_type": "pdf_extracted",
+    "item_idx": 49
+  },
+  {
+    "page_num": 2,
+    "text": " Cold reset occurs when SC or HSM watchdog reset occurs.",
+    "text_type": "pdf_extracted",
+    "item_idx": 50
+  },
+  {
+    "page_num": 2,
+    "text": " AP system reset is not used.",
+    "text_type": "pdf_extracted",
+    "item_idx": 51
+  },
+  {
+    "page_num": 2,
+    "text": " Core reset of main cluster or s ub-cluster is executed by SC when main cluster or s ub-cluster watchdog reset occurs, or on",
+    "text_type": "pdf_extracted",
+    "item_idx": 52
+  },
+  {
+    "page_num": 2,
+    "text": "main cluster or s ub-cluster ’s request.",
+    "text_type": "pdf_extracted",
+    "item_idx": 53
+  },
+  {
+    "page_num": 2,
+    "text": "Table 3.1 Processor and Reset Source of TCC807x Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 54,
+    "is_diagram": true
+  },
+  {
+    "page_num": 2,
+    "text": "Reset  Normal Boot with SIC  Normal Boot without SIC",
+    "text_type": "pdf_extracted",
+    "item_idx": 55
+  },
+  {
+    "page_num": 2,
+    "text": "Processor  Reset Source  Processor  Reset Source",
+    "text_type": "pdf_extracted",
+    "item_idx": 56
+  },
+  {
+    "page_num": 2,
+    "text": "GRESET  N/A GRESET  N/A GRESET",
+    "text_type": "pdf_extracted",
+    "item_idx": 57
+  },
+  {
+    "page_num": 2,
+    "text": "Cold Reset  N/A SIC Watchdog Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 58
+  },
+  {
+    "page_num": 2,
+    "text": "HSM Watchdog Reset  N/A SC Watchdog Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 59
+  },
+  {
+    "page_num": 2,
+    "text": "HSM Watchdog Reset  SIC SIC Request",
+    "text_type": "pdf_extracted",
+    "item_idx": 60
+  },
+  {
+    "page_num": 2,
+    "text": "AP System",
+    "text_type": "pdf_extracted",
+    "item_idx": 61
+  },
+  {
+    "page_num": 2,
+    "text": "Reset  SIC SC Watchdog Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 62
+  },
+  {
+    "page_num": 2,
+    "text": "SIC Request  Not used",
+    "text_type": "pdf_extracted",
+    "item_idx": 63
+  },
+  {
+    "page_num": 2,
+    "text": "Core Reset  SC Main/Sub -cluster Watchdog Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 64
+  },
+  {
+    "page_num": 2,
+    "text": "Main/Sub -cluster Request  SC Main/Sub -cluster Watchdog Reset",
+    "text_type": "pdf_extracted",
+    "item_idx": 65
+  },
+  {
+    "page_num": 2,
+    "text": "Main/Sub -cluster Request",
+    "text_type": "pdf_extracted",
+    "item_idx": 66
+  },
+  {
+    "page_num": 3,
+    "text": "TCC80 7x-Application Note for Boot Sequence  Rev. 0.10",
+    "text_type": "pdf_extracted",
+    "item_idx": 67
+  },
+  {
+    "page_num": 3,
+    "text": "10/18 Chapter 4",
+    "text_type": "pdf_extracted",
+    "item_idx": 68
+  },
+  {
+    "page_num": 3,
+    "text": "4 REDUNDANT BOOT",
+    "text_type": "pdf_extracted",
+    "item_idx": 69
+  },
+  {
+    "page_num": 3,
+    "text": "TCC807x has two identical sets of boot images, the primary images and the secondary images, to support redundant boot. When",
+    "text_type": "pdf_extracted",
+    "item_idx": 70
+  },
+  {
+    "page_num": 3,
+    "text": "TCC807x fails to boot with primary images, it retries booting with the secondary images. When TCC807x fails to boot with secondary",
+    "text_type": "pdf_extracted",
+    "item_idx": 71
+  },
+  {
+    "page_num": 3,
+    "text": "images, it enters firmware download mode.",
+    "text_type": "pdf_extracted",
+    "item_idx": 72
+  },
+  {
+    "page_num": 3,
+    "text": "Figure 4.1 shows the flowchart of TCC807x redundant boot.",
+    "text_type": "pdf_extracted",
+    "item_idx": 73,
+    "is_diagram": true
+  },
+  {
+    "page_num": 3,
+    "text": "At each boot level, the processors can recognize the boot failure status by checking  Boot F ailure Flag (BFF).  By checking BFF, the",
+    "text_type": "pdf_extracted",
+    "item_idx": 74
+  },
+  {
+    "page_num": 3,
+    "text": "processors can determine which boot images to use (primary images or secondary images). If BFF indicates that boot is failed for",
+    "text_type": "pdf_extracted",
+    "item_idx": 75
+  },
+  {
+    "page_num": 3,
+    "text": "both images, TCC807x enters firmware download mode. If image loading or verification fails , it is considered as the boot failure and",
+    "text_type": "pdf_extracted",
+    "item_idx": 76
+  },
+  {
+    "page_num": 3,
+    "text": "the processor sets BFF and operates reset.",
+    "text_type": "pdf_extracted",
+    "item_idx": 77
+  },
+  {
+    "page_num": 3,
+    "text": "Figure 4.1 Flowchart of TCC807x Redundant Boot",
+    "text_type": "pdf_extracted",
+    "item_idx": 78,
+    "is_diagram": true
+  },
+  {
+    "page_num": 3,
+    "text": "Check BFF",
+    "text_type": "pdf_extracted",
+    "item_idx": 79,
+    "is_diagram": true
+  },
+  {
+    "page_num": 3,
+    "text": "(AP/SIC)Start BL",
+    "text_type": "pdf_extracted",
+    "item_idx": 80
+  },
+  {
+    "page_num": 3,
+    "text": "BFF?",
+    "text_type": "pdf_extracted",
+    "item_idx": 81
+  },
+  {
+    "page_num": 3,
+    "text": "Load image (P)Firmware",
+    "text_type": "pdf_extracted",
+    "item_idx": 82
+  },
+  {
+    "page_num": 3,
+    "text": "Download",
+    "text_type": "pdf_extracted",
+    "item_idx": 83
+  },
+  {
+    "page_num": 3,
+    "text": "ModeLoad image (S)",
+    "text_type": "pdf_extracted",
+    "item_idx": 84
+  },
+  {
+    "page_num": 3,
+    "text": "Success",
+    "text_type": "pdf_extracted",
+    "item_idx": 85
+  },
+  {
+    "page_num": 3,
+    "text": "load and",
+    "text_type": "pdf_extracted",
+    "item_idx": 86
+  },
+  {
+    "page_num": 3,
+    "text": "verify ?Go to next",
+    "text_type": "pdf_extracted",
+    "item_idx": 87
+  },
+  {
+    "page_num": 3,
+    "text": "step",
+    "text_type": "pdf_extracted",
+    "item_idx": 88
+  },
+  {
+    "page_num": 3,
+    "text": "Set BFFReset",
+    "text_type": "pdf_extracted",
+    "item_idx": 89
+  },
+  {
+    "page_num": 3,
+    "text": "OperationNo Boot Failure(P) Boot Failure All Boot Failure",
+    "text_type": "pdf_extracted",
+    "item_idx": 90
+  },
+  {
+    "page_num": 3,
+    "text": "Success",
+    "text_type": "pdf_extracted",
+    "item_idx": 91
+  },
+  {
+    "page_num": 3,
+    "text": "Error",
+    "text_type": "pdf_extracted",
+    "item_idx": 92
+  }
+]

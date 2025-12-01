@@ -84,9 +84,13 @@ class DiagramQAGUI:
         chat_tab = ttk.Frame(notebook)
         notebook.add(chat_tab, text="Chat")
 
-        # Chat 상단: 대화 내용
-        chat_display_frame = ttk.Frame(chat_tab)
-        chat_display_frame.pack(fill=tk.BOTH, expand=True, pady=(4, 2))
+        # Chat 상단: 대화 + 다이어그램을 좌우로 분할 (약 60% / 40%)
+        chat_top = ttk.Frame(chat_tab)
+        chat_top.pack(fill=tk.BOTH, expand=True, pady=(4, 2))
+
+        # 좌측: 대화 내용
+        chat_display_frame = ttk.Frame(chat_top)
+        chat_display_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 4))
 
         self.answer_text = scrolledtext.ScrolledText(
             chat_display_frame, wrap=tk.WORD, height=25
@@ -97,6 +101,13 @@ class DiagramQAGUI:
             "PDF를 선택하고 텍스트를 추출한 뒤, 궁금한 점을 질문해보세요.\n"
             "예) \"Figure 3.1의 리셋 시퀀스를 설명해줘\", \"SIC 관련 제한사항 정리해줘\" 등\n\n",
         )
+
+        # 우측: 다이어그램 이미지 (폭 약 40% 느낌)
+        image_frame = ttk.LabelFrame(chat_top, text="다이어그램 이미지", padding="5")
+        image_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=False)
+
+        self.image_label = ttk.Label(image_frame, text="다이어그램 이미지가 표시됩니다")
+        self.image_label.pack(expand=True)
 
         # Chat 하단: 입력 + 전송
         chat_input_frame = ttk.Frame(chat_tab)
@@ -109,13 +120,6 @@ class DiagramQAGUI:
         ttk.Button(chat_input_frame, text="전송", command=self.search_question).pack(
             side=tk.LEFT, padx=5
         )
-
-        # Chat 우측/하단: 다이어그램 이미지
-        image_frame = ttk.LabelFrame(chat_tab, text="다이어그램 이미지", padding="5")
-        image_frame.pack(fill=tk.X, pady=(0, 4))
-
-        self.image_label = ttk.Label(image_frame, text="다이어그램 이미지가 표시됩니다")
-        self.image_label.pack(expand=True)
 
         # --- Source 탭 (원문/다이어그램 목록) ---
         source_tab = ttk.Frame(notebook)

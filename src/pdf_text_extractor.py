@@ -23,11 +23,6 @@ except ImportError:
     HAS_FITZ = False
     import sys
     print(f"[WARN] PyMuPDF를 import할 수 없습니다. 다이어그램 스냅샷 기능을 사용할 수 없습니다.")
-    print(f"[INFO] 현재 Python: {sys.executable}")
-    print(f"[INFO] 해결 방법:")
-    print(f"      1. conda 환경 활성화: conda activate sk")
-    print(f"      2. 또는 설치: pip install PyMuPDF")
-    print(f"      3. 또는 sk 환경의 python 직접 사용: C:\\Users\\INSoft\\miniconda3\\envs\\sk\\python.exe diagram_gui.py")
 
 
 class PDFTextExtractor:
@@ -226,25 +221,6 @@ class PDFTextExtractor:
     ) -> List[Dict]:
         """
         다이어그램 영역 스냅샷 생성
-        
-        Args:
-            pdf_path: PDF 파일 경로
-            diagram_groups: 다이어그램 그룹 리스트
-            text_items: 전체 텍스트 아이템 (위치 추정용)
-            dpi: 이미지 해상도
-        
-        Returns:
-            List[Dict]: 다이어그램 스냅샷 리스트
-            [
-                {
-                    "diagram_id": "figure_3_1",
-                    "title": "Figure 3.1...",
-                    "page_num": 1,
-                    "snapshot_base64": "...",
-                    "related_texts": [...]
-                },
-                ...
-            ]
         """
         if not diagram_groups:
             return []
